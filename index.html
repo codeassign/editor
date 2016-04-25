@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
+  <title>CodeAssign Editor</title>
+
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="css/materialize.min.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <link rel="stylesheet" href="http://cdn.jsdelivr.net/highlight.js/9.2.0/styles/default.min.css">
+  <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <link href="css/markjax.css" type="text/css" rel="stylesheet" media="screen,projection">
+  <link href="css/github-markdown.css" type="text/css" rel="stylesheet" media="screen,projection">
+
+</head>
+
+<body>
+  <header>
+    <nav class="blue-grey darken-4" role="navigation">
+      <div class="nav-wrapper"><a id="logo-container" href="#" class="cyan-text text-darken-1 brand-logo">CodeAssign Editor</a></div>
+    </nav>
+  </header>
+
+  <main>
+    <div class="container container-editor">
+      <div class="row controls">
+        <div class="col s3 m3 l2">
+          <button class="btn cyan darken-1 waves-effect waves-light modal-trigger" data-target="fullscreen-preview">
+            Preview<i class="left material-icons">open_in_new</i>
+          </button>
+        </div>
+        <div class="col s1 m1 l1">
+            <input name="perspective" type="radio" id="column_view" checked />
+            <label for="column_view"><i class="material-icons">view_column</i></label>
+        </div>
+        <div class="col s1 m1 l1">
+          <input name="perspective" type="radio" id="stream_view" />
+          <label for="stream_view"><i class="material-icons">view_stream</i></label>
+        </div>
+        <div class="col s3 m3 l2">
+          <input type="checkbox" id="select-markdown" checked="checked" />
+          <label for="select-markdown">Markdown</label>
+        </div>
+        <div class="col s3 m3 l2">
+          <input type="checkbox" id="select-mathjax" checked="checked" />
+          <label for="select-mathjax">MathJax</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-column col s6 m6 l6">
+<textarea class="form-control markjax-editor markjax-input" placeholder="Type here">
+# CodeAssign Editor
+This editor supports [Github](https://www.github.com) flavored `Markdown` and $\LaTeX$.
+
+Start writing $\LaTeX$ equations between `$` for inline and `$$` for block equations.
+
+* This is inline equation: $E=mc^2$
+* This is block equation: $$\frac{df(x)}{dx}=\lim_{h \to 0}{\frac{f(x+h)-f(x)}{h}}$$
+
+And don't worry about syntax highlighting:
+
+```
+#include <stdio.h>
+
+int main(void)
+{
+    printf("hello, world\n");
+    return 0;
+}
+```
+
+## Thanks
+
+* [autosize](https://github.com/jackmoore/autosize)
+* [github-markdown-css](https://github.com/sindresorhus/github-markdown-css)
+* [highlight.js](https://highlightjs.org/)
+* [jQuery](http://jquery.com/)
+* [MathJax](http://mathjax.com/)
+* [markdown+mathjax](https://github.com/kerzol/markdown-mathjax)
+* [marked](https://github.com/chjj/marked)
+* [Materialize](http://materializecss.com/)</textarea>
+        </div>
+        <div class="preview-column col s6 m6 l6">
+          <div class="mathjax markjax-editor markjax-preview markdown-body"></div>
+          <div class="mathjax markjax-editor markjax-preview-buffer markjax-hidden markdown-body"></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="fullscreen-preview" class="modal">
+      <div class="modal-content markdown-body">
+      </div>
+      <div class="modal-footer">
+        <a href="#!" class="red darken-4 modal-action modal-close waves-effect waves-green btn">Close</a>
+      </div>
+    </div>
+  </main>
+
+  <footer class="page-footer blue-grey darken-4">
+    <div class="footer-copyright blue-grey darken-4">
+      <div class="container">
+      © 2016 <a class="cyan-text text-darken-1" href="http://codeassign.com">CodeAssign</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/jquery-2.2.2.min.js"></script>
+  <script src="js/materialize.min.js"></script>
+  <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  <script src="http://cdn.jsdelivr.net/highlight.js/9.2.0/highlight.min.js"></script>
+  <script src="js/marked.js"></script>
+  <script src="js/autosize.min.js"></script>
+  <script src="js/markjax.js"></script>
+</body>
+</html>
