@@ -2,7 +2,7 @@ var Download = {
   latex: null,
 
   Latex: function() {
-    var markdown = $(".markjax-editor.markjax-input").val().replace(/</, "&lt;");
+    var markdown = $(".markjax-editor.markjax-input").val().replace(/</gm, "&lt;");
     var site = "http://pandoc.org/cgi-bin/trypandoc?from=markdown&to=latex&text=" + encodeURIComponent(markdown);
     var yql = "http://query.yahooapis.com/v1/public/yql?q=" +
               encodeURIComponent('select * from html where url="' + site + '"') + '&format=xml&callback=';
@@ -17,26 +17,31 @@ var Download = {
       }
     });
 
-    this.latex = latex.replace(/&lt;/, "<").replace(/&gt;/, ">");
-    this.latex = latexBegin + this.latex + latexEnd;
+    latex = latex.replace(/\\\(|\\\)/gm, "$");
+    this.latex = latexBegin + latex.replace(/&lt;/gm, "<").replace(/&gt;/gm, ">") + latexEnd;
   }
 }
 
 $(document).ready(function() {
   $("#download-latex").on("click", function() {
     Download.Latex();
-    var latexHTML = " <html><head></head><body><pre style=\"word-wrap: \
-                    break-word; white-space: pre-wrap;\">" + encodeURIComponent(Download.latex)
-                    + "</pre></body></html>";
-    window.open("data:text/html;charset=utf-8," + latexHTML, "_blank").focus();
+    window.open("data:text/plain;charset=utf-8," + encodeURIComponent(Download.latex), "_blank").focus();
   });
 
   $("#download-pdf").on("click", function() {
+    if ($(this).hasClass("disabled")) {
+      return;
+    }
     Download.Latex();
-    var pdfURL = "http://localhost:2700/compile?text=" +
-                 encodeURIComponent(Download.latex) +
+    var pdfURL = "http://latex.aslushnikov.com/compile?text=" +
+                 encodeURIComponent(Download.latex.replace(/\\/gm, "\\\\").replace(/\$/gm, "\\$")) +
                  "&download=CodeAssignEditor.pdf";
     window.open(pdfURL, "_self");
+  });
+
+  $("#download-markdown").on("click", function() {
+    var markdown = $(".markjax-editor.markjax-input").val();
+    window.open("data:text/plain;charset=utf-8," + encodeURIComponent(markdown), "_blank").focus();
   });
 });
 
