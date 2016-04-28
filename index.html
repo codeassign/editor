@@ -24,24 +24,34 @@
   <main>
     <div class="container container-editor">
       <div class="row controls">
-        <div class="col s12 m6 l2">
-          <button class="btn cyan darken-1 waves-effect waves-light modal-trigger" data-target="fullscreen-preview">
+        <div class="col s5 m3 l2">
+          <button class="btn cyan darken-1 waves-effect waves-light modal-trigger" style="margin-bottom: 5px;" data-target="fullscreen-preview">
             Preview<i class="left material-icons">open_in_new</i>
           </button>
         </div>
-        <div class="col s6 m6 l1">
+        <div class="col s6 m2 l2">
+          <a id="download-latex" download="CodeAssignEditor.latex" style="margin-bottom: 5px;" class="btn cyan darken-1 waves-effect waves-light">
+            LaTeX<i class="left material-icons">system_update_alt</i>
+          </a>
+        </div>
+        <div class="col s6 m2 l2">
+          <button id="download-pdf" style="margin-bottom: 5px;" class="btn cyan darken-1 waves-effect waves-light">
+            PDF<i class="left material-icons">system_update_alt</i>
+          </button>
+        </div>
+        <div class="col s6 m2 l6">
             <input name="perspective" type="radio" id="column_view" checked />
             <label for="column_view"><i class="material-icons">view_column</i></label>
         </div>
-        <div class="col s6 m6 l1">
+        <div class="col s6 m3 l6">
           <input name="perspective" type="radio" id="stream_view" />
           <label for="stream_view"><i class="material-icons">view_stream</i></label>
         </div>
-        <div class="col s6 m6 l6">
+        <div class="col s6 m2 l2">
           <input type="checkbox" id="select-markdown" checked="checked" />
           <label for="select-markdown">Markdown</label>
         </div>
-        <div class="col s6 m6 l6">
+        <div class="col s6 m3 l3">
           <input type="checkbox" id="select-mathjax" checked="checked" />
           <label for="select-mathjax">MathJax</label>
         </div>
@@ -111,5 +121,6 @@ int main(void)
   <script src="js/marked.js"></script>
   <script src="js/autosize.min.js"></script>
   <script src="js/markjax.js"></script>
+  <script src="js/download.js"></script>
 </body>
 </html>
