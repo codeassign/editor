@@ -85,7 +85,7 @@ var Preview = {
     if (this.textarea[index].classList.contains("markjax-editor")) {
       text = this.textarea[index].value;
     } else {
-      text = this.textarea[index].innerHTML;
+      text = this.textarea[index].innerHTML.replace(/&lt;/mg, '<').replace(/&gt;/mg, '>');
     }
 
     if (this.softUpdate === true && text === this.oldtext[index]) {
