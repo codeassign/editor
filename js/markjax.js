@@ -2,6 +2,7 @@ MathJax.Hub.Config({
   showProcessingMessages: false,
   tex2jax: {
     inlineMath: [['$','$']],
+    displayMath: [['$$', '$$']],
     ignoreClass: ".*",
     processClass: "mathjax"
   },
@@ -29,86 +30,77 @@ marked.setOptions({
 var Preview = {
   delay: 50,
 
+  input: null,
   preview: null,
   buffer: null,
 
   timeout: [],
-  mjRunning: [],
-  oldtext: [],
+  isRunning: [],
+  oldText: [],
 
-  index: null,
-  length: null,
+  numberOfElements: null,
 
-  useMarkdown: true,
-  useMathJax: true,
-  softUpdate: true,
+  markdownEnabled: true,
+  mathjaxEnabled: true,
+  forceUpdate: false,
 
   Init: function () {
+    this.input = document.getElementsByClassName("markjax-input");
     this.preview = document.getElementsByClassName("markjax-preview");
     this.buffer = document.getElementsByClassName("markjax-preview-buffer");
-    this.textarea = document.getElementsByClassName("markjax-input");
 
-    this.length = this.preview.length;
-    for (var i = 0; i < this.length; i++) {
+    this.numberOfElements = this.preview.length;
+    for (var i = 0; i < this.numberOfElements; i++) {
+      this.input[i].setAttribute("markjax-index", i);
       this.preview[i].setAttribute("markjax-index", i);
       this.buffer[i].setAttribute("markjax-index", i);
-      this.textarea[i].setAttribute("markjax-index", i);
     }
   },
 
-  SwapBuffers: function (index) {
-    this.preview[index].innerHTML = this.buffer[index].innerHTML
-  },
-
-  Update: function () {
-    if (this.timeout[this.index]) {
-      clearTimeout(this.timeout[this.index]);
+  Update: function (index) {
+    if (this.timeout[index]) {
+      clearTimeout(this.timeout[index]);
     }
 
-    this.timeout[this.index] = setTimeout(MathJax.Callback(["CreatePreview", Preview, this.index]), this.delay);
+    this.timeout[index] = setTimeout(
+      MathJax.Callback(["CreatePreview", Preview, index]), this.delay
+    );
   },
 
   UpdateAll: function () {
-    for (var i = 0; i < this.length; i++) {
-      this.index = i;
-      this.Update();
+    for (var i = 0; i < this.numberOfElements; i++) {
+      this.Update(i);
     }
   },
 
   CreatePreview: function (index) {
     this.timeout[index] = null;
-    if (this.mjRunning[index]) {
+    if (this.isRunning[index]) {
       return;
     }
 
     var text;
-    if (this.textarea[index].classList.contains("markjax-editor")) {
-      text = this.textarea[index].value;
+    if (this.input[index].classList.contains("markjax-editor")) {
+      text = this.input[index].value;
     } else {
-      text = this.textarea[index].innerHTML.replace(/&lt;/mg, '<').replace(/&gt;/mg, '>');
+      text = this.input[index].innerHTML.replace(/&lt;/mg, '<').replace(/&gt;/mg, '>');
     }
 
-    if (this.softUpdate === true && text === this.oldtext[index]) {
+    if (!this.forceUpdate && text === this.oldText[index]) {
       return;
     }
 
-    this.oldtext[index] = text;
+    this.oldText[index] = text;
+    this.isRunning[index] = true;
 
-    this.mjRunning[index] = true;
-
-    if (this.useMarkdown === true) {
-      this.buffer[index].innerHTML = marked(text);
-      var code = $(this.buffer[index]).find("code");
-      for (var i = 0; i < code.length; i++) {
-        code[i].innerHTML = code[i].innerHTML.replace(/\$/mg, '\\$');
-      }
-
-      $(this.buffer[index]).find("*").addClass("mathjax");
+    if (this.markdownEnabled === true) {
+      this.buffer[index].innerHTML = marked(this.EscapeTex(text));
+      $(this.buffer[index]).find("*").not("code").addClass("mathjax");
     } else {
       this.buffer[index].innerHTML = text;
     }
 
-    if (this.useMathJax === true) {
+    if (this.mathjaxEnabled === true) {
       MathJax.Hub.Queue(
         ["Typeset", MathJax.Hub, this.buffer[index]],
         ["PreviewDone", this, index],
@@ -120,35 +112,28 @@ var Preview = {
   },
 
   PreviewDone: function (index) {
-    this.mjRunning[index] = false;
-    Preview.softUpdate = true;
-
-    if (this.useMarkdown === true) {
-      var code = $(this.buffer[index]).find("code");
-      for (var i = 0; i < code.length; i++) {
-        code[i].innerHTML = code[i].innerHTML.replace(/\\\$/mg, '$');
-      }
-    }
-
-    this.SwapBuffers(index);
+    this.isRunning[index] = false;
+    Preview.forceUpdate = false;
+    this.preview[index].innerHTML = this.buffer[index].innerHTML;
   },
 
-  // The idea here is to perform fast updates. See http://stackoverflow.com/questions/11228558/let-pagedown-and-mathjax-work-together/21563171?noredirect=1#comment46869312_21563171
-  // But our implementation is a bit buggy: flickering, bad rendering when someone types very fast.
-  //
-  // If you want to enable such buggy fast updates, you should
-  // add something like  onkeypress="Preview.UpdateKeyPress(event)" to textarea's attributes.
-  UpdateKeyPress: function (event) {
-    if (event.keyCode < 16 || event.keyCode > 47) {
-      this.preview[this.index].innerHTML = '<p>' + marked(this.textarea[this.index].value) + '</p>';
-      this.buffer[this.index].innerHTML = '<p>' + marked(this.textarea[this.index].value) + '</p>';
-    }
-    this.Update();
+  EscapeTex: function(text) {
+    var re = /(\n|\r\n|\r)*(\${1,2})((?:\\.|[^$])*)\2(\n|\r\n|\r)*/g;
+    var out = text.replace(re, function(m, c1, c2, c3, c4){
+      c3 = c3.replace(/_/g, '\\_')
+           .replace(/</g, '&lt;')
+           .replace(/\|/g, '\\vert ')
+           .replace(/\[/g, '\\lbrack ')
+           .replace(/\\{/g, '\\lbrace ')
+           .replace(/\\}/g, '\\rbrace ')
+           .replace(/\\\\/g, '\\\\\\\\');
+      var start = (c2 == '$') ? c2 : '\n\n' + c2;
+      var end = (c2 == '$') ? c2 : c2 + '\n\n';
+      return start + c3 + end;
+    });
+    return out;
   }
 };
-
-Preview.callback = MathJax.Callback(["CreatePreview", Preview]);
-Preview.callback.autoReset = true;
 
 $(document).ready(function() {
   Preview.Init();
@@ -175,18 +160,17 @@ $(document).ready(function() {
   });
 
   $(".markjax-editor.markjax-input").on("keyup", function(){
-    Preview.index = parseInt(this.getAttribute("markjax-index"));
-    Preview.Update();
+    Preview.Update(parseInt(this.getAttribute("markjax-index")));
   });
 
   $("#select-markdown").on("change", function() {
-    Preview.useMarkdown = this.checked;
-    Preview.softUpdate = false;
+    Preview.markdownEnabled = this.checked;
+    Preview.forceUpdate = true;
     Preview.UpdateAll();
   });
   $("#select-mathjax").on("change", function() {
-    Preview.useMathJax = this.checked;
-    Preview.softUpdate = false;
+    Preview.mathjaxEnabled = this.checked;
+    Preview.forceUpdate = true;
     Preview.UpdateAll();
   });
 
