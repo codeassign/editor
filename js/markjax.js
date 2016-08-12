@@ -94,7 +94,11 @@ var Preview = {
     this.isRunning[index] = true;
 
     if (this.markdownEnabled === true) {
-      this.buffer[index].innerHTML = marked(this.EscapeTex(text));
+      this.buffer[index].innerHTML = this.ReEscapeTex(marked(this.EscapeTex(text)));
+      var code = $(this.buffer[index]).find("code");
+      for (var i = 0; i < code.length; i++) {
+        code[i].innerHTML = code[i].innerHTML.replace(/\\\$/g, '$');
+      }
       $(this.buffer[index]).find("*").not("code").addClass("mathjax");
     } else {
       this.buffer[index].innerHTML = text;
@@ -118,19 +122,30 @@ var Preview = {
   },
 
   EscapeTex: function(text) {
-    var re = /(\n|\r\n|\r)*(\${1,2})((?:\\.|[^$])*)\2(\n|\r\n|\r)*/g;
-    var out = text.replace(re, function(m, c1, c2, c3, c4){
-      c3 = c3.replace(/_/g, '\\_')
-           .replace(/</g, '&lt;')
-           .replace(/\|/g, '\\vert ')
-           .replace(/\[/g, '\\lbrack ')
-           .replace(/\\{/g, '\\lbrace ')
-           .replace(/\\}/g, '\\rbrace ')
-           .replace(/\\\\/g, '\\\\\\\\');
-      var start = (c2 == '$') ? c2 : '\n\n' + c2;
-      var end = (c2 == '$') ? c2 : c2 + '\n\n';
-      return start + c3 + end;
+    var re = /(`+)(\s*)([\s\S]*?[^`])(\s*)(\1)(?!`)/g;
+    var out = text.replace(re, function(m, p1, p2, p3, p4, p5, offset, string) {
+      return p1 + p2 + p3.replace(/\$/g, '\\$') + p4 + p5;
     });
+  
+    re = /^( {4}[^\n]+\n*)+/g;
+    out = out.replace(re, function(m, p1, offset, string) {
+      return p1.replace(/\$/g, '\\$');
+    });
+  
+    re = /([^\\\$]|^)(\${1,2})(?!\$)(\s*)([\s\S]*?[^$])(\s*)(\2)(?!\2)/g;
+    out = out.replace(re, function(m, p1, p2, p3, p4, p5, p6, offset, string) {
+      return p1 + p2 + p3 + p4.replace(/(.)/g, '\\$1') + p5 + p6;
+    });
+
+    return out;
+  },
+
+  ReEscapeTex: function(text) {
+    var re = /([^\\\$]|^)(\${1,2})(?!\$)(\s*)([\s\S]*?[^$])(\s*)(\2)(?!\2)/g;
+    var out = text.replace(re, function(m, p1, p2, p3, p4, p5, p6, offset, string) {
+      return p1 + p2 + p3 + p4.replace(/\\(.)/g, '$1') + p5 + p6;
+    });
+  
     return out;
   }
 };
