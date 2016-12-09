@@ -1,134 +1,53 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
-  <title>CodeAssign Editor</title>
+<html>
+  <head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+    <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+    <script type="text/javascript" src="https://codeassign.github.io/markjax/dist/markjax.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flexboxgrid/6.3.1/flexboxgrid.min.css">
 
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <link href="css/materialize.min.css" type="text/css" rel="stylesheet" media="screen,projection"/>
-  <link rel="stylesheet" href="http://cdn.jsdelivr.net/highlight.js/9.2.0/styles/default.min.css">
-  <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
-  <link href="css/markjax.css" type="text/css" rel="stylesheet" media="screen,projection">
-  <link href="css/github-markdown.css" type="text/css" rel="stylesheet" media="screen,projection">
+    <style>
+      body {
+        padding: 80px;
+      }
+    </style>
+  </head>
 
-</head>
+  <body>
+    <a href="https://github.com/codeassign/editor"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"></a>
+    <textarea class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+## CodeAssign Editor
+Is a [SimpleMDE](https://simplemde.com/) Markdown editor powerd by [MarkJax](http://markjax.codeassign.com/) parser.
 
-<body>
-  <header>
-    <nav class="blue-grey darken-4" role="navigation">
-      <div class="nav-wrapper"><a id="logo-container" href="#" class="blue-grey-text text-lighten-4 brand-logo">CodeAssign Editor</a></div>
-    </nav>
-  </header>
-
-  <main>
-    <div class="container container-editor">
-      <div class="row controls">
-        <div class="col s5 m3 l2">
-          <button class="btn cyan darken-1 waves-effect waves-light modal-trigger" style="margin-bottom: 8px;" data-target="fullscreen-preview">
-            Preview<i class="left material-icons">open_in_new</i>
-          </button>
-        </div>
-        <div class="col s6 m9 l2">
-          <button id="download-markdown" download="CodeAssignEditor.latex" style="margin-bottom: 8px;" class="btn cyan darken-1 waves-effect waves-light">
-            Makrdown<i class="left material-icons">system_update_alt</i>
-          </button>
-        </div>
-        <div class="col s5 m3 l2">
-          <button id="download-latex" download="CodeAssignEditor.latex" style="margin-bottom: 8px;" class="btn cyan darken-1 waves-effect waves-light">
-            LaTeX<i class="left material-icons">system_update_alt</i>
-          </button>
-        </div>
-        <div class="col s7 m9 l6">
-          <button id="download-pdf" style="margin-bottom: 8px;" class="btn cyan darken-1">
-            PDF<i class="left material-icons">system_update_alt</i>
-          </button>
-        </div>
-        <div class="col s6 m2 l1">
-            <input name="perspective" type="radio" id="column_view" checked />
-            <label for="column_view"><i class="material-icons">view_column</i></label>
-        </div>
-        <div class="col s6 m2 l1">
-          <input name="perspective" type="radio" id="stream_view" />
-          <label for="stream_view"><i class="material-icons">view_stream</i></label>
-        </div>
-        <div class="col s6 m6 l6">
-          <input type="checkbox" id="select-markdown" checked="checked" />
-          <label for="select-markdown">Markdown</label>
-        </div>
-        <div class="col s6 m6 l6">
-          <input type="checkbox" id="select-mathjax" checked="checked" />
-          <label for="select-mathjax">MathJax</label>
-        </div>
-      </div>
-      <div class="row">
-        <div class="input-column col s6 m6 l6">
-<textarea class="form-control markjax-editor markjax-input" placeholder="Type here">
-# CodeAssign Editor
-This editor supports [Github](https://www.github.com) flavored `Markdown` and $\LaTeX$.
-
-Start writing $\LaTeX$ equations between `$` for inline and `$$` for block equations.
-
-* This is inline equation: $E=mc^2$
-* This is block equation: $$\frac{df(x)}{dx}=\lim_{h \to 0}{\frac{f(x+h)-f(x)}{h}}$$
-
-And don't worry about syntax highlighting:
+To use it you need to include both *SimpleMDE* and *MarkJax* into your page:
 
 ```
-#include <stdio.h>
-
-int main(void)
-{
-    printf("hello, world\n");
-    return 0;
-}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+<script type="text/javascript" src="https://codeassign.github.io/markjax/dist/markjax.min.js"></script>
 ```
 
-## Thanks
+and now when you create new `SimpleMDE` object you need to specify custom `previewRender` function which uses *MarkJax*:
+```
+var simplemde = new SimpleMDE({                                                                                      
+  previewRender: function(plainText, preview) {                                                                      
+    setTimeout(function() {                                                                                          
+      markjax(plainText, preview);                                                                                   
+    }, 250);                                                                                                         
+  },                                                                                                                 
+});
+```
+</textarea>
 
-* [autosize](https://github.com/jackmoore/autosize)
-* [github-markdown-css](https://github.com/sindresorhus/github-markdown-css)
-* [highlight.js](https://highlightjs.org/)
-* [jQuery](http://jquery.com/)
-* [LaTeX Online](http://latex.aslushnikov.com/)
-* [MathJax](http://mathjax.com/)
-* [markdown+mathjax](https://github.com/kerzol/markdown-mathjax)
-* [marked](https://github.com/chjj/marked)
-* [Materialize](http://materializecss.com/)
-* [Pandoc](http://pandoc.org/try/)
-* [YQL](https://developer.yahoo.com/yql/)</textarea>
-        </div>
-        <div class="preview-column col s6 m6 l6">
-          <div class="mathjax markjax-editor markjax-preview markdown-body"></div>
-          <div class="mathjax markjax-editor markjax-preview-buffer markjax-hidden markdown-body"></div>
-        </div>
-      </div>
-    </div>
-
-    <div id="fullscreen-preview" class="modal">
-      <div class="modal-content markdown-body">
-      </div>
-      <div class="modal-footer">
-        <a href="#!" class="red darken-4 modal-action modal-close waves-effect waves-green btn">Close</a>
-      </div>
-    </div>
-  </main>
-
-  <footer class="page-footer blue-grey darken-4">
-    <div class="footer-copyright blue-grey darken-4">
-      <div class="container">
-      © 2016 <a class="cyan-text text-darken-1" href="http://codeassign.com">CodeAssign</a>
-      </div>
-    </div>
-  </footer>
-
-  <script src="js/jquery-2.2.2.min.js"></script>
-  <script src="js/materialize.min.js"></script>
-  <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-  <script src="http://cdn.jsdelivr.net/highlight.js/9.2.0/highlight.min.js"></script>
-  <script src="js/marked.js"></script>
-  <script src="js/autosize.min.js"></script>
-  <script src="js/markjax.js"></script>
-  <script src="js/download.js"></script>
-</body>
+    <script>
+      var simplemde = new SimpleMDE({
+        previewRender: function(plainText, preview) {
+          setTimeout(function() {
+            markjax(plainText, preview);
+          }, 250);
+        },
+      });
+      SimpleMDE.togglePreview(simplemde);
+    </script>
+  </body>
 </html>

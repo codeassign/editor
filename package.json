@@ -1,0 +1,47 @@
+{
+  "name": "markjax",
+  "version": "1.11.2",
+  "description": "Javascript parser for converting Markdown with LaTeX to HTML",
+  "keywords": [
+    "parser",
+    "markdown",
+    "latex",
+    "javascript",
+    "mathjax"
+  ],
+  "homepage": "http://markjax.codeassign.com/",
+  "main": "./js/markjax.js",
+  "license": "Apache 2.0",
+  "company": "CodeAssign",
+  "author": {
+    "name": "Herman Zvonimir Došilović",
+    "url": "http://hermanzdosilovic.me/"
+  },
+  "bugs": {
+    "url": "https://github.com/codeassign/markjax/issues"
+  },
+  "dependencies": {
+    "marked": "*",
+    "mathjax": "*"
+  },
+  "devDependencies": {
+    "browserify": "*",
+    "debug": "*",
+    "eslint": "*",
+    "gulp": "*",
+    "gulp-concat": "*",
+    "gulp-debug": "*",
+    "gulp-eslint": "*",
+    "gulp-header": "*",
+    "gulp-jsbeautifier": "*",
+    "gulp-clean-css": "*",
+    "gulp-rename": "*",
+    "gulp-uglify": "*",
+    "vinyl-source-stream": "*",
+    "vinyl-buffer": "*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/codeassign/markjax"
+  }
+}
