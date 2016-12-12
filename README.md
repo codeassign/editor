@@ -12,10 +12,6 @@ To use it you need to include both *SimpleMDE* and *MarkJax* into your page:
 and now when you create new `SimpleMDE` object you need to specify custom `previewRender` function which uses *MarkJax*:
 ```javascript
 var simplemde = new SimpleMDE({                                                                                      
-  previewRender: function(plainText, preview) {                                                                      
-    setTimeout(function() {                                                                                          
-      markjax(plainText, preview);                                                                                   
-    }, 250);                                                                                                         
-  },                                                                                                                 
+  previewRender: markjax
 });
 ```
