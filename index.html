@@ -130,5 +130,38 @@ int main(void)
   <script src="js/autosize.min.js"></script>
   <script src="js/markjax.js"></script>
   <script src="js/download.js"></script>
+
+  <script>
+      var simplemde = new SimpleMDE({
+        previewRender: markjax,
+        spellChecker: false,
+        indentWithTabs: false,
+        toolbar: [
+          "bold",
+          "italic",
+          "heading",
+          "|",
+          "quote",
+          "unordered-list",
+          "ordered-list",
+          "|",
+          "link",
+          "image",
+          "|",
+          "preview",
+          "|",
+          "guide",
+          {
+            name: "latex",
+            action: function latexExpr(editor) {
+              // .appendText("$$")
+            },
+            className: "fa fa-star",
+            title: "Latex Expression"
+          }
+        ]
+      });
+      SimpleMDE.toggleSideBySide(simplemde);
+    </script>
 </body>
 </html>
