@@ -49,8 +49,9 @@ $$\sum_{n=1}^{\infty} 2^{-n} = 1$$
           {
             name: "latexExpr",
             action: function latexExpr(editor) {
-              var textArea = document.getElementById("inputText");
-              textArea.innerHtml = textArea.innerHtml + "banana";
+              var content = simplemde.value();
+              content += "$ $";
+              simplemde.value(content);
             },
             className: "fa fa-bar-chart-o",
             title: "Latex Expression"
@@ -58,7 +59,9 @@ $$\sum_{n=1}^{\infty} 2^{-n} = 1$$
           {
             name: "latexEq",
             action: function latexEq(editor) {
-              document.getElementById("inputText").innerHTML += "$$ $$";
+              var content = simplemde.value();
+              content += "$$ $$";
+              simplemde.value(content);
             },
             className: "fa fa-area-chart",
             title: "Latex Equation"
