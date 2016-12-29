@@ -37,6 +37,15 @@ $$\sum_{n=1}^{\infty} 2^{-n} = 1$$
 </textarea>
 
     <script>
+    function insertAfterCursor(string) {      
+      var cursorCh = simplemde.codemirror.getCursor()["ch"]
+      var cursorLine = simplemde.codemirror.getCursor()["line"]
+      var anchor = {line: cursorLine, ch: cursorCh}
+
+      simplemde.codemirror.doc.setSelection(anchor)
+      simplemde.codemirror.doc.replaceSelection(string)
+    }
+
       var simplemde = new SimpleMDE({
         previewRender: markjax,
         spellChecker: false,
@@ -49,9 +58,7 @@ $$\sum_{n=1}^{\infty} 2^{-n} = 1$$
           {
             name: "latexExpr",
             action: function latexExpr(editor) {
-              var content = simplemde.value();
-              content += "$ $";
-              simplemde.value(content);
+              insertAfterCursor("$ $")              
             },
             className: "fa fa-bar-chart-o",
             title: "Latex Expression"
@@ -59,9 +66,7 @@ $$\sum_{n=1}^{\infty} 2^{-n} = 1$$
           {
             name: "latexEq",
             action: function latexEq(editor) {
-              var content = simplemde.value();
-              content += "$$ $$";
-              simplemde.value(content);
+              insertAfterCursor("$$ $$")
             },
             className: "fa fa-area-chart",
             title: "Latex Equation"
@@ -79,7 +84,10 @@ $$\sum_{n=1}^{\infty} 2^{-n} = 1$$
           "fullscreen",
           "|",
           "guide"
-        ]
+        ],
+        "insertTexts": {
+          latexEq: ["", "%%"]
+        }
       });
       SimpleMDE.toggleSideBySide(simplemde);
     </script>
