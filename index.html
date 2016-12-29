@@ -42,8 +42,7 @@ $$\sum_{n=1}^{\infty} 2^{-n} = 1$$
       var cursorLine = simplemde.codemirror.getCursor()["line"]
       var anchor = {line: cursorLine, ch: cursorCh}
 
-      simplemde.codemirror.doc.setSelection(anchor)
-      simplemde.codemirror.doc.replaceSelection(string)
+      simplemde.codemirror.doc.replaceRange(string, anchor)
     }
 
       var simplemde = new SimpleMDE({
