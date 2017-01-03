@@ -39,7 +39,12 @@ $$\sum_{n=1}^{\infty} 2^{-n} = 1$$
 
     <script>
       var simplemde = new SimpleMDE({
-        previewRender: markjax,
+        previewRender: function(plainText, preview) {
+          setTimeout(function() {
+            markjax(plainText, preview);
+          }, 50);
+          return preview.innerHTML;
+        },
         spellChecker: false,
         indentWithTabs: false
       });
