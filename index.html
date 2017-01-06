@@ -14,7 +14,7 @@
   </head>
 
   <body>
-    <textarea id="inputText" class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+    <textarea class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
 ## CodeAssign Editor
 Is a [SimpleMDE](https://simplemde.com/) Markdown editor powerd by [MarkJax](http://markjax.codeassign.com/) parser.
 
@@ -38,11 +38,11 @@ $$\sum_{n=1}^{\infty} 2^{-n} = 1$$
 
     <script>
     function insertAfterCursor(string) {      
-      var cursorCh = simplemde.codemirror.getCursor()["ch"]
-      var cursorLine = simplemde.codemirror.getCursor()["line"]
-      var anchor = {line: cursorLine, ch: cursorCh}
+      var cursorCh = simplemde.codemirror.getCursor()["ch"];
+      var cursorLine = simplemde.codemirror.getCursor()["line"];
+      var anchor = {line: cursorLine, ch: cursorCh};
 
-      simplemde.codemirror.doc.replaceRange(string, anchor)
+      simplemde.codemirror.doc.replaceRange(string, anchor);
     }
 
       var simplemde = new SimpleMDE({
@@ -60,20 +60,20 @@ $$\sum_{n=1}^{\infty} 2^{-n} = 1$$
           "heading",
           "|",
           {
-            name: "latexExpr",
-            action: function latexExpr(editor) {
+            name: "inlineMath",
+            action: function inlineMath(editor) {
               insertAfterCursor("$ $")              
             },
             className: "fa fa-bar-chart-o",
-            title: "Latex Expression"
+            title: "Inline Latex Expression"
           },
           {
-            name: "latexEq",
-            action: function latexEq(editor) {
+            name: "mathBlock",
+            action: function mathBlock(editor) {
               insertAfterCursor("$$ $$")
             },
             className: "fa fa-area-chart",
-            title: "Latex Equation"
+            title: "Latex Expression Block"
           },
           "|",
           "quote",
@@ -88,10 +88,7 @@ $$\sum_{n=1}^{\infty} 2^{-n} = 1$$
           "fullscreen",
           "|",
           "guide"
-        ],
-        "insertTexts": {
-          latexEq: ["", "%%"]
-        }
+        ]
       });
       SimpleMDE.toggleSideBySide(simplemde);
     </script>
