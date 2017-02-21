@@ -45,12 +45,9 @@ $$\sum_{n=1}^{\infty} 2^{-n} = 1$$
     }
 
     function insertAfterCursor(string, len) {      
-      var anchor = getCursorCoordinates();
-
-      simplemde.codemirror.doc.replaceRange(string, anchor);
+      simplemde.codemirror.doc.replaceRange(string, getCursorCoordinates());
 
       var cursorCoordinates = getCursorCoordinates();
-      var b = cursorCoordinates.line;
       simplemde.codemirror.setCursor({ line: cursorCoordinates.line, ch: cursorCoordinates.ch - len });
 
       simplemde.codemirror.focus();
