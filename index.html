@@ -37,12 +37,23 @@ $$\sum_{n=1}^{\infty} 2^{-n} = 1$$
 </textarea>
 
     <script>
-    function insertAfterCursor(string) {      
-      var cursorCh = simplemde.codemirror.getCursor()["ch"];
+    function getCursorCoordinates() {
       var cursorLine = simplemde.codemirror.getCursor()["line"];
-      var anchor = {line: cursorLine, ch: cursorCh};
+      var cursorCh = simplemde.codemirror.getCursor()["ch"];
+
+      return { line: cursorLine, ch: cursorCh };
+    }
+
+    function insertAfterCursor(string, len) {      
+      var anchor = getCursorCoordinates();
 
       simplemde.codemirror.doc.replaceRange(string, anchor);
+
+      var cursorCoordinates = getCursorCoordinates();
+      var b = cursorCoordinates.line;
+      simplemde.codemirror.setCursor({ line: cursorCoordinates.line, ch: cursorCoordinates.ch - len });
+
+      simplemde.codemirror.focus();
     }
 
       var simplemde = new SimpleMDE({
@@ -62,7 +73,7 @@ $$\sum_{n=1}^{\infty} 2^{-n} = 1$$
           {
             name: "inlineMath",
             action: function inlineMath(editor) {
-              insertAfterCursor("$ $")              
+              insertAfterCursor("$$", 1)              
             },
             className: "fa fa-bar-chart-o",
             title: "Inline Latex Expression"
@@ -70,7 +81,7 @@ $$\sum_{n=1}^{\infty} 2^{-n} = 1$$
           {
             name: "mathBlock",
             action: function mathBlock(editor) {
-              insertAfterCursor("$$ $$")
+              insertAfterCursor("$$$$", 2)
             },
             className: "fa fa-area-chart",
             title: "Latex Expression Block"
@@ -90,7 +101,7 @@ $$\sum_{n=1}^{\infty} 2^{-n} = 1$$
           "guide"
         ]
       });
-      SimpleMDE.toggleSideBySide(simplemde);
+      simplemde.toggleSideBySide(simplemde);
     </script>
   </body>
 </html>
