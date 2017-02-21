@@ -32,12 +32,27 @@ var simplemde = new SimpleMDE({
   previewRender: markjax
 });
 ```
-
 And of course you can still write and use LaTeX:
 $$\sum_{n=1}^{\infty} 2^{-n} = 1$$
 </textarea>
 
     <script>
+    function getCursorCoordinates() {
+      var cursorLine = simplemde.codemirror.getCursor()["line"];
+      var cursorCh = simplemde.codemirror.getCursor()["ch"];
+
+      return { line: cursorLine, ch: cursorCh };
+    }
+
+    function insertAfterCursor(string, len) {      
+      simplemde.codemirror.doc.replaceRange(string, getCursorCoordinates());
+
+      var cursorCoordinates = getCursorCoordinates();
+      simplemde.codemirror.setCursor({ line: cursorCoordinates.line, ch: cursorCoordinates.ch - len });
+
+      simplemde.codemirror.focus();
+    }
+
       var simplemde = new SimpleMDE({
         previewRender: function(plainText, preview) {
           setTimeout(function() {
@@ -46,9 +61,44 @@ $$\sum_{n=1}^{\infty} 2^{-n} = 1$$
           return preview.innerHTML;
         },
         spellChecker: false,
-        indentWithTabs: false
+        indentWithTabs: false,
+        toolbar: [
+          "bold",
+          "italic",
+          "heading",
+          "|",
+          {
+            name: "inlineMath",
+            action: function inlineMath(editor) {
+              insertAfterCursor("$$", 1)              
+            },
+            className: "fa fa-bar-chart-o",
+            title: "Inline Latex Expression"
+          },
+          {
+            name: "mathBlock",
+            action: function mathBlock(editor) {
+              insertAfterCursor("$$$$", 2)
+            },
+            className: "fa fa-area-chart",
+            title: "Latex Expression Block"
+          },
+          "|",
+          "quote",
+          "unordered-list",
+          "ordered-list",
+          "|",
+          "link",
+          "image",
+          "|",
+          "preview",
+          "side-by-side",
+          "fullscreen",
+          "|",
+          "guide"
+        ]
       });
-      SimpleMDE.toggleSideBySide(simplemde);
+      simplemde.toggleSideBySide(simplemde);
     </script>
   </body>
 </html>
